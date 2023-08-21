@@ -1,5 +1,5 @@
 project(protobuf_cmake)
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 2.8.12)
 
 
 find_package(PkgConfig REQUIRED)
