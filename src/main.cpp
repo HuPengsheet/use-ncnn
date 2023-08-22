@@ -111,6 +111,25 @@ static void print_initializer_info(const onnx::GraphProto graph)
     
 }
 
+static void print_tensor_data(const onnx::GraphProto graph){
+    cout<<"TensorData"<<endl;
+    cout<<"***************************************"<<endl;
+    for (int j = 0; j < graph.initializer_size(); j++)
+    {
+        onnx::TensorProto t=graph.initializer(j);
+        cout<<"datatype : "<<t.data_type()<<endl;
+       //cout<<"float_data_size : "<<t.float_data_size()<<endl;
+       cout<<"has_raw_data : "<<t.has_raw_data()<<endl;
+
+        const std::string& raw_data = t.raw_data();
+        int size = (int)raw_data.size() / 4;
+        cout<<"data size:"<<size<<endl;
+
+    }
+
+        
+}
+
 int main(){
 
     const char * path="/home/hupeng/code_c/github/ONNX_Parse/onnx_file/model.onnx";
@@ -130,8 +149,8 @@ int main(){
 
     //print_mode_info(model);
     //print_graph_info(graph);
-    print_initializer_info(graph);
-
+   // print_initializer_info(graph);
+    print_tensor_data(graph);
 
     
 
