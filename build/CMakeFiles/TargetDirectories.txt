@@ -1,0 +1,3 @@
+/home/hupeng/code_c/github/use_ncnn/build/CMakeFiles/yolov5s.dir
+/home/hupeng/code_c/github/use_ncnn/build/CMakeFiles/edit_cache.dir
+/home/hupeng/code_c/github/use_ncnn/build/CMakeFiles/rebuild_cache.dir

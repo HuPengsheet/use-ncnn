@@ -1,4 +1,3 @@
-
 #include "onnx.pb.h"
 
 #include <algorithm>
