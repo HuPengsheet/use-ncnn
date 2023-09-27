@@ -1,16 +1,3 @@
-// Tencent is pleased to support the open source community by making ncnn available.
-//
-// Copyright (C) 2020 THL A29 Limited, a Tencent company. All rights reserved.
-//
-// Licensed under the BSD 3-Clause License (the "License"); you may not use this file except
-// in compliance with the License. You may obtain a copy of the License at
-//
-// https://opensource.org/licenses/BSD-3-Clause
-//
-// Unless required by applicable law or agreed to in writing, software distributed
-// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-// CONDITIONS OF ANY KIND, either express or implied. See the License for the
-// specific language governing permissions and limitations under the License.
 
 #include "layer.h"
 #include "net.h"
@@ -25,63 +12,30 @@
 #include <float.h>
 #include <stdio.h>
 #include <vector>
+#include <iostream>
 
-//#define YOLOV5_V60 1 //YOLOv5 v6.0
-#define YOLOV5_V60 1 //YOLOv5 v6.2 export  onnx model method https://github.com/shaoshengsong/yolov5_62_export_ncnn
-
-#if YOLOV5_V60 || YOLOV5_V62
-#define MAX_STRIDE 64
-#else
-#define MAX_STRIDE 32
-class YoloV5Focus : public ncnn::Layer
+#define YOLOV5_V60 1 
+void pretty_print(const ncnn::Mat& m)
 {
-public:
-    YoloV5Focus()
+    for (int q=0; q<m.c; q++)
     {
-        one_blob_only = true;
-    }
-
-    virtual int forward(const ncnn::Mat& bottom_blob, ncnn::Mat& top_blob, const ncnn::Option& opt) const
-    {
-        int w = bottom_blob.w;
-        int h = bottom_blob.h;
-        int channels = bottom_blob.c;
-
-        int outw = w / 2;
-        int outh = h / 2;
-        int outc = channels * 4;
-
-        top_blob.create(outw, outh, outc, 4u, 1, opt.blob_allocator);
-        if (top_blob.empty())
-            return -100;
-
-        #pragma omp parallel for num_threads(opt.num_threads)
-        for (int p = 0; p < outc; p++)
+        const float* ptr = m.channel(q);
+        for (int z=0; z<m.d; z++)
         {
-            const float* ptr = bottom_blob.channel(p % channels).row((p / channels) % 2) + ((p / channels) / 2);
-            float* outptr = top_blob.channel(p);
-
-            for (int i = 0; i < outh; i++)
+            for (int y=0; y<m.h; y++)
             {
-                for (int j = 0; j < outw; j++)
+                for (int x=0; x<m.w; x++)
                 {
-                    *outptr = *ptr;
-
-                    outptr += 1;
-                    ptr += 2;
+                    printf("%f ", ptr[x]);
                 }
-
-                ptr += w;
+                ptr += m.w;
+                printf("\n");
             }
+            printf("\n");
         }
-
-        return 0;
+        printf("------------------------\n");
     }
-};
-
-DEFINE_LAYER_CREATOR(YoloV5Focus)
-#endif //YOLOV5_V60    YOLOV5_V62
-
+}
 struct Object
 {
     cv::Rect_<float> rect;
@@ -202,14 +156,14 @@ static void generate_proposals(const ncnn::Mat& anchors, int stride, const ncnn:
     const int num_class = feat_blob.w - 5;
 
     const int num_anchors = anchors.w / 2;
-
+	//遍历三个anchor
     for (int q = 0; q < num_anchors; q++)
     {
         const float anchor_w = anchors[q * 2];
         const float anchor_h = anchors[q * 2 + 1];
 
         const ncnn::Mat feat = feat_blob.channel(q);
-
+		//遍历每一个结果
         for (int i = 0; i < num_grid_y; i++)
         {
             for (int j = 0; j < num_grid_x; j++)
@@ -237,7 +191,8 @@ static void generate_proposals(const ncnn::Mat& anchors, int stride, const ncnn:
                         // y = x[i].sigmoid()
                         // y[..., 0:2] = (y[..., 0:2] * 2. - 0.5 + self.grid[i].to(x[i].device)) * self.stride[i]  # xy
                         // y[..., 2:4] = (y[..., 2:4] * 2) ** 2 * self.anchor_grid[i]  # wh
-
+						//下面的代码就是前面说的对坐标的处理，
+                        //bx,by乘以下采样的倍数就对应到图片原始尺寸的坐标，bw和bh乘以anchor的宽和高就是图像原始尺度的宽高
                         float dx = sigmoid(featptr[0]);
                         float dy = sigmoid(featptr[1]);
                         float dw = sigmoid(featptr[2]);
@@ -275,28 +230,11 @@ static int detect_yolov5(const cv::Mat& bgr, std::vector<Object>& objects)
     ncnn::Net yolov5;
 
     yolov5.opt.use_vulkan_compute = true;
-    // yolov5.opt.use_bf16_storage = true;
-
-    // original pretrained model from https://github.com/ultralytics/yolov5
-    // the ncnn model https://github.com/nihui/ncnn-assets/tree/master/models
-#if YOLOV5_V62
-    if (yolov5.load_param("yolov5s_6.2.param"))
+    //加载模型的参数
+    if (yolov5.load_param("model_param/yolov5s-6.0.param"))
         exit(-1);
-    if (yolov5.load_model("yolov5s_6.2.bin"))
+    if (yolov5.load_model("model_param/yolov5s-6.0.bin"))
         exit(-1);
-#elif YOLOV5_V60
-    if (yolov5.load_param("../model_param/5s_6.0.ncnn.param"))
-        exit(-1);
-    if (yolov5.load_model("../model_param/5s_6.0.ncnn.bin"))
-        exit(-1);
-#else
-    yolov5.register_custom_layer("YoloV5Focus", YoloV5Focus_layer_creator);
-
-    if (yolov5.load_param("yolov5s.param"))
-        exit(-1);
-    if (yolov5.load_model("yolov5s.bin"))
-        exit(-1);
-#endif
 
     const int target_size = 640;
     const float prob_threshold = 0.25f;
@@ -304,11 +242,12 @@ static int detect_yolov5(const cv::Mat& bgr, std::vector<Object>& objects)
 
     int img_w = bgr.cols;
     int img_h = bgr.rows;
-
+    const int MAX_STRIDE = 64;
     // letterbox pad to multiple of MAX_STRIDE
     int w = img_w;
     int h = img_h;
     float scale = 1.f;
+    //判断长边，然后做对应缩放
     if (w > h)
     {
         scale = (float)target_size / w;
@@ -324,29 +263,31 @@ static int detect_yolov5(const cv::Mat& bgr, std::vector<Object>& objects)
 
     ncnn::Mat in = ncnn::Mat::from_pixels_resize(bgr.data, ncnn::Mat::PIXEL_BGR2RGB, img_w, img_h, w, h);
 
-    // pad to target_size rectangle
-    // yolov5/utils/datasets.py letterbox
+    //把wpad和hpad对齐到MAX_STRIDE
+    //就是利用除法的截断原理
+    //其次就是因为要上取整所以加了MAX_STRIDE - 1
     int wpad = (w + MAX_STRIDE - 1) / MAX_STRIDE * MAX_STRIDE - w;
     int hpad = (h + MAX_STRIDE - 1) / MAX_STRIDE * MAX_STRIDE - h;
     ncnn::Mat in_pad;
+    //填充
     ncnn::copy_make_border(in, in_pad, hpad / 2, hpad - hpad / 2, wpad / 2, wpad - wpad / 2, ncnn::BORDER_CONSTANT, 114.f);
-
+    //归一化
     const float norm_vals[3] = {1 / 255.f, 1 / 255.f, 1 / 255.f};
     in_pad.substract_mean_normalize(0, norm_vals);
 
     ncnn::Extractor ex = yolov5.create_extractor();
-
+    std::cout<<in_pad.w<<"  "<<in_pad.h<<std::endl;
     ex.input("images", in_pad);
 
     std::vector<Object> proposals;
 
-    // anchor setting from yolov5/models/yolov5s.yaml
+    
 
-    // stride 8
+    //对8倍下采样的输出进行提取和处理
     {
         ncnn::Mat out;
-        ex.extract("194", out);
-
+        ex.extract("output", out);
+        
         ncnn::Mat anchors(6);
         anchors[0] = 10.f;
         anchors[1] = 13.f;
@@ -361,17 +302,11 @@ static int detect_yolov5(const cv::Mat& bgr, std::vector<Object>& objects)
         proposals.insert(proposals.end(), objects8.begin(), objects8.end());
     }
 
-    // stride 16
+    //对16倍下采样的输出进行提取和处理
     {
         ncnn::Mat out;
-
-#if YOLOV5_V62
-        ex.extract("353", out);
-#elif YOLOV5_V60
-        ex.extract("195", out);
-#else
-        ex.extract("781", out);
-#endif
+        ex.extract("375", out);
+        
 
         ncnn::Mat anchors(6);
         anchors[0] = 30.f;
@@ -386,17 +321,13 @@ static int detect_yolov5(const cv::Mat& bgr, std::vector<Object>& objects)
 
         proposals.insert(proposals.end(), objects16.begin(), objects16.end());
     }
-
-    // stride 32
+    
+    //对32倍下采样的输出进行提取和处理
     {
         ncnn::Mat out;
-#if YOLOV5_V62
-        ex.extract("367", out);
-#elif YOLOV5_V60
-        ex.extract("196", out);
-#else
-        ex.extract("801", out);
-#endif
+
+        ex.extract("400", out);
+        
         ncnn::Mat anchors(6);
         anchors[0] = 116.f;
         anchors[1] = 90.f;
@@ -411,7 +342,7 @@ static int detect_yolov5(const cv::Mat& bgr, std::vector<Object>& objects)
         proposals.insert(proposals.end(), objects32.begin(), objects32.end());
     }
 
-    // sort all proposals by score from highest to lowest
+    //nms前对所有bbox根据框的置信度排序
     qsort_descent_inplace(proposals);
 
     // apply nms with nms_threshold
