@@ -125,7 +125,7 @@ InnerProduct     Gemm_48                  1 1 onnx::Gemm_190 191 0=1000 1=1 2=51
 
 ​	简单的和大家分析一下怎么看这个参数。首先`7767517`是一个magic数，表明这是ncnn的格式。`58 66`分别是layer和blob的个数。可能很多初学者分不清layer和blob的区别，我在这里为大家简单介绍一下
 
-![image-20230924124443271](/home/hupeng/文档/笔记/ncnn/image-20230924124443271.png)
+![image-20230924124443271](../image/1.png)
 
 ​	我们使用netron打开resnet18.param可以看到resnet18的结构，其中像Convolution，ReLU，Pooling，Split，BinaryOp都是一个算子也就是layer。blob可以看作是中间数据的存储，以Split算子为例，它有1个输入2个输出，则一共有3个blob，像Convolution和Relu等算子它输入输出都是1个blob。所以一般情况下blob数看到回比layer数多的多。
 
