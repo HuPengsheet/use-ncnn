@@ -213,7 +213,7 @@ Permute          Transpose_276            1 1 399 400 0=1
 
 ​	其中输出的bbox的四个坐标(tx,ty,pw,ph)也需要进行进一步的处理：
 
-![image-20230927222718561](/home/hupeng/.config/Typora/typora-user-images/image-20230927222718561.png)
+![image-20230927222718561](../image/222.png)
 
 **bx=(2⋅σ(tx)−0.5)+cx**
 
