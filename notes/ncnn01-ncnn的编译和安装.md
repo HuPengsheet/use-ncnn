@@ -1,6 +1,7 @@
 ## ncnn源码下载
 
-1.直接在https://github.com/Tencent/ncnn地址进行下载。如果下载太慢可以在gitee里下载，地址是https://gitee.com/Tencent/ncnn?_from=gitee_search。
+1.直接在https://github.com/Tencent/ncnn地址进行下载。如果下载太慢可以在gitee里下载，地址是:   
+https://gitee.com/Tencent/ncnn?_from=gitee_search。
 
 2.建议使用git下载
 
