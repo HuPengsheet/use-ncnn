@@ -175,7 +175,7 @@ static int detect_resnet18(const cv::Mat& bgr, std::vector<float>& cls_scores)
     ncnn::Mat in = ncnn::Mat::from_pixels_resize(bgr.data, ncnn::Mat::PIXEL_BGR2RGB, bgr.cols, bgr.rows, 224, 224);
     
     //图像归一标准化，以R通道为例（x/225-0.485）/0.229，化简后可以得到下面的式子
-    //需要注意的式substract_mean_normalize里的方差其实是方差的倒数，这样在算的时候就可以将除法转换为乘法计算
+    //需要注意的式substract_mean_normalize里的标准差其实是标准差的倒数，这样在算的时候就可以将除法转换为乘法计算
     //所以norm_vals里用的是1除
     const float mean_vals[3] = {0.485f*255.f, 0.456f*255.f, 0.406f*255.f};
     const float norm_vals[3] = {1/0.229f/255.f, 1/0.224f/255.f, 1/0.225f/255.f};
