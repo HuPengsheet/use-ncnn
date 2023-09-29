@@ -5,7 +5,7 @@ set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "/home/hupeng/code_c/github/ncnn/build/install/lib/cmake/ncnn/;/home/hupeng/code_c/github/libtorch/share/cmake/Torch")
 find_package(ncnn   REQUIRED)
 find_package(OpenCV REQUIRED)
-find_package(Torch REQUIRED)
+
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
