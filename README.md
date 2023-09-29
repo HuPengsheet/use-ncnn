@@ -1,6 +1,6 @@
 # use-ncnn
 
-  **这里提供关于 ncnn 的安装、使用、源码分析以及加速手段的详细教程。每个部分都有对应的视频教程可在 B 站观看。**   
+  **这里提供关于 ncnn 的安装、使用、源码分析和加速手段的详细教程**   
 B站视频：https://www.bilibili.com/video/BV1MV411F7iV/?spm_id_from=333.999.0.0
 
 ## ncnn 是什么？
