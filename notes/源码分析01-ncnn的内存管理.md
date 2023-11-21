@@ -1,4 +1,4 @@
-	ncnn里面主要有三种内存申请的方式，分别是`ncnn::fastMalloc`、`PoolAllocator`和`UnlockedPoolAllocator`。其中PoolAllocator和UnlockedPoolAllocator里会调用ncnn::fastMalloc分配内存，然后利用内存池来维护内存。PoolAllocator和UnlockedPoolAllocator分别是带锁的内存池和不带锁的内存池。下面展开来讲：
+  ncnn里面主要有三种内存申请的方式，分别是`ncnn::fastMalloc`、`PoolAllocator`和`UnlockedPoolAllocator`。其中PoolAllocator和UnlockedPoolAllocator里会调用ncnn::fastMalloc分配内存，然后利用内存池来维护内存。PoolAllocator和UnlockedPoolAllocator分别是带锁的内存池和不带锁的内存池。下面展开来讲：
 
 ## ncnn::fastMalloc与ncnn::fastFree
 

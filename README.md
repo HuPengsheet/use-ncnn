@@ -14,8 +14,10 @@ ncnn 是一个为移动端和嵌入式设备优化的高性能神经网络前向
 - [ncnn的使用03：onnx转ncnn模型跑yolov5-6.0](https://github.com/HuPengsheet/use-ncnn/blob/main/notes/ncnn03-onnx%E8%BD%ACncnn%E6%A8%A1%E5%9E%8B%E8%B7%91yolov5-6.0.md)
 - [ncnn的使用04：pnnx转ncnn模型跑resnet18](https://github.com/HuPengsheet/use-ncnn/blob/main/notes/ncnn04-pnnx%E8%BD%ACncnn%E6%A8%A1%E5%9E%8B%E8%B7%91resnet18.md)
 - [ncnn的使用05：pnnx转ncnn模型跑yolov5-6.0](https://github.com/HuPengsheet/use-ncnn/blob/main/notes/ncnn05--pnnx%E8%BD%ACncnn%E6%A8%A1%E5%9E%8B%E8%B7%91yolov5-6.0.md)
-
+  
+未完待续，持续更新！！
 ## ncnn源码分析
+- [ncnn源码分析01：ncnn的内存管理](https://github.com/HuPengsheet/use-ncnn/blob/main/notes/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%9001-ncnn%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86.md)
 
 这个部分将深入探讨 ncnn 的源码结构和实现细节。通过分析源码，你将对 ncnn 的内部工作原理有更深入的理解。
 
