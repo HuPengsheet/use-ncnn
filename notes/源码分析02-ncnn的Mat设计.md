@@ -98,6 +98,7 @@ void Mat::create(int _w, int _h, int _c, size_t _elemsize, Allocator* _allocator
 ​	然后48/4=12，则cstep=12
 
 类似的totalsize也会字节对齐，然后再使用allocator分配内存，实际分配的内存还会对64个字节(这个在前面提到过)，最后Mat在内存中的图是这样的：
+![微信截图_20231101194325](../image/内存.png)
 
 ## Mat的浅拷贝
 
