@@ -16,14 +16,14 @@ int c;
 size_t cstep;
 ```
 
-​	data是Mat中矩阵数据实际的存储地址，refcount是引用计数指针，它的位置在data数据的末尾。elemsize是矩阵中每个元素的字节数。elempack是把指明多个数据打包成一个数据（**具体看参考https://github.com/Tencent/ncnn/wiki/element-packing**）。allocator就是内存分配器，可以参考第一节的讲述。dims,w,h,d,c表明数据的维数。cstep是channel维度上数据的个数。
+​	data是Mat中矩阵数据实际的存储地址，refcount是引用计数指针，它的位置在data数据的末尾。elemsize是矩阵中每个元素的字节数。elempack是把指明多个数据打包成一个数据（具体看参考https://github.com/Tencent/ncnn/wiki/element-packing）。allocator就是内存分配器，可以参考第一节的讲述。dims,w,h,d,c表明数据的维数。cstep是channel维度上数据的个数。
 
 ## Mat的内存分布图
 
- 	以生成一个3×3×3的矩阵为例
+ 	以生成一个3×2×4的矩阵为例
 
 ```c++
-ncnn::Mat mat1(3,3,3)
+ncnn::Mat mat1(3,2,4)
 ```
 
 ​	会调用如下的构造函数
@@ -81,21 +81,12 @@ void Mat::create(int _w, int _h, int _c, size_t _elemsize, Allocator* _allocator
 
 ​	ncnn的Mat是在channel维度上对齐，这主要是因为ncnn在每个维度上用openmp多线程加速，已经考虑到armv8加速的原因。alignSize是字节对齐的函数，，就一行代码`(sz + n - 1) & -n;`给大家举个例子说明：
 
-​	sz=w×h×elemsize=3×3×4=36,则
+​	sz=w×h×elemsize=3×2×4=24,则
 
 ​	(sz + n - 1) & -n
+​	=32
 
-​	=(36+16-1)&(-16)
-
-​	=(51)&(-16)
-
-​	=(00110011)&(11110000)
-
-​	=(00110000)
-
-​	=48
-
-​	然后48/4=12，则cstep=12
+​	然后32/4=8，则cstep=8
 
 类似的totalsize也会字节对齐，然后再使用allocator分配内存，实际分配的内存还会对64个字节(这个在前面提到过)，最后Mat在内存中的图是这样的：   
 
