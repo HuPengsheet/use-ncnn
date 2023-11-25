@@ -16,7 +16,7 @@ int c;
 size_t cstep;
 ```
 
-​	data是Mat中矩阵数据实际的存储地址，refcount是引用计数指针，它的位置在data数据的末尾。elemsize是矩阵中每个元素的字节数。elempack是把指明多个数据打包成一个数据（具体看参考https://github.com/Tencent/ncnn/wiki/element-packing）。allocator就是内存分配器，可以参考第一节的讲述。dims,w,h,d,c表明数据的维数。cstep是channel维度上数据的个数。
+​	data是Mat中矩阵数据实际的存储地址，refcount是引用计数指针，它的位置在data数据的末尾。elemsize是矩阵中每个元素的字节数。elempack是把指明多个数据打包成一个数据（具体看参考https://github.com/Tencent/ncnn/wiki/element-packing）  allocator就是内存分配器，可以参考第一节的讲述。dims,w,h,d,c表明数据的维数。cstep是channel维度上数据的个数。
 
 ## Mat的内存分布图
 
