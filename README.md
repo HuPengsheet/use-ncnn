@@ -23,7 +23,7 @@ ncnn 是一个为移动端和嵌入式设备优化的高性能神经网络前向
 - [ncnn源码分析04：ncnn的模型加载](https://github.com/HuPengsheet/use-ncnn/blob/main/notes/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%9004-ncnn%E7%9A%84%E6%A8%A1%E5%9E%8B%E5%8A%A0%E8%BD%BD.md)
 - [ncnn源码分析05：ncnn的模型推理过程](https://github.com/HuPengsheet/use-ncnn/blob/main/notes/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%9005-ncnn%E7%9A%84%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86%E8%BF%87%E7%A8%8B.md)
 - [ncnn源码分析06：ncnn卷积类算子实现](https://github.com/HuPengsheet/use-ncnn/blob/main/notes/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%9006-ncnn%E5%8D%B7%E7%A7%AF%E7%B1%BB%E7%AE%97%E5%AD%90%E5%AE%9E%E7%8E%B0.md)
-- [ncnn源码分析06：ncnn激活函数类算子实现](https://github.com/HuPengsheet/use-ncnn/blob/main/notes/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%9007-ncnn%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E7%B1%BB%E7%AE%97%E5%AD%90%E5%AE%9E%E7%8E%B0.md)
+- [ncnn源码分析07：ncnn激活函数类算子实现](https://github.com/HuPengsheet/use-ncnn/blob/main/notes/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%9007-ncnn%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E7%B1%BB%E7%AE%97%E5%AD%90%E5%AE%9E%E7%8E%B0.md)
 
 
 这个部分将深入探讨 ncnn 的源码结构和实现细节。通过分析源码，你将对 ncnn 的内部工作原理有更深入的理解。
